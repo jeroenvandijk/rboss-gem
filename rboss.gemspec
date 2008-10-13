@@ -36,4 +36,5 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<diff-lcs>, [">= 1.1.2"])
     s.add_dependency(%q<hoe>, [">= 1.7.0"])
   end
+
 end
