@@ -53,6 +53,10 @@ module Boss
       
         if config.format?
           search_results = ResultFactory.build(data)
+          
+          # set requested page count size
+          # Used in math to determine total pages and current page
+          search_results.set_instance_variable('page_count', config.count) if search_results.kind_of?(Boss::ResultCollection)
         else
           search_results = data
         end
