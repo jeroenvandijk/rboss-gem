@@ -1,3 +1,6 @@
+=== Version 0.1.x (not release as gem yet)
+* Implement the collection api will_paginate uses to display page links in the Boss::ResultCollection (Jared Pace)
+
 === Version 0.1.5
 * Use pure ruby json gem
 
