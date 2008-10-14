@@ -1,12 +1,14 @@
 Gem::Specification.new do |s|
   s.name = %q{rboss}
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joseph Wilk"]
-  s.date = %q{2008-09-13}
+  s.date = %q{2008-10-14}
   s.description = %q{Api wrapping Yahoo Boss search}
   s.email = ["joe@eshopworks.co.uk"]
+  s.extra_rdoc_files = ["History.txt", "License.txt", "Manifest.txt", "TODO.txt"]
+  s.files = ["History.txt", "License.txt", "Manifest.txt", "README.textile", "Rakefile", "TODO.txt", "config/hoe.rb", "config/requirements.rb", "features/steps/web_search_steps.rb", "features/web_search.feature", "gem_tasks/cucumber.rake", "gem_tasks/deployment.rake", "gem_tasks/environment.rake", "gem_tasks/fix_cr_lf.rake", "gem_tasks/gemspec.rake", "gem_tasks/rspec.rake", "gem_tasks/verify_rcov.rake", "gem_tasks/website.rake", "lib/boss.rb", "lib/boss/api.rb", "lib/boss/config.rb", "lib/boss/result.rb", "lib/boss/result/base.rb", "lib/boss/result/image.rb", "lib/boss/result/news.rb", "lib/boss/result/spell.rb", "lib/boss/result/web.rb", "lib/boss/result_collection.rb", "lib/boss/result_factory.rb", "lib/boss/version.rb", "rboss.gemspec", "spec/boss/api_spec.rb", "spec/boss/config_spec.rb", "spec/boss/result_collection_spec.rb", "spec/boss/result_factory_spec.rb", "spec/spec.opts", "spec/spec_helper.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/eshopworks/rboss-gem}
   s.rdoc_options = ["--main", "README.txt"]
@@ -36,5 +38,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<diff-lcs>, [">= 1.1.2"])
     s.add_dependency(%q<hoe>, [">= 1.7.0"])
   end
-
 end
