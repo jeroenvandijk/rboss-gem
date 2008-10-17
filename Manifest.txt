@@ -1,7 +1,7 @@
 History.txt
 License.txt
 Manifest.txt
-README.textile
+README.txt
 Rakefile
 TODO.txt
 config/hoe.rb

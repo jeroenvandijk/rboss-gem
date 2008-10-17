@@ -35,7 +35,7 @@ VERS = Boss::VERSION::STRING + (REV ? ".#{REV}" : "")
 RDOC_OPTS = ['--quiet', '--title', 'RBoss documentation',
     "--opname", "index.html",
     "--line-numbers", 
-    "--main", "README.textile",
+    "--main", "README.txt",
     "--inline-source"]
 
 class Hoe
