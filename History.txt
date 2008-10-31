@@ -1,3 +1,6 @@
+== Version 0.1.8 (In Git)
+* Updating to support cucumber's new syntax for scenario tables
+
 === Version 0.1.7
 * Replaced textile readme with txt version to prevent gem install errors
 
