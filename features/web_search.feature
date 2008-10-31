@@ -8,7 +8,8 @@ Feature: Web Search
     When I do a 'web' search for 'monkeys'
     Then I will receive search results
     And I will be able to see the total hits
-    
+  
+  More Examples:
   | type   | term   |
   | web    | monkey |
   | images | monkey |
