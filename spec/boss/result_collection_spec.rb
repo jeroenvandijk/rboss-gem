@@ -21,6 +21,16 @@ describe Boss::ResultCollection do
     
   end
   
+  it "should allow merging two results collections" do
+    collection_one = Boss::ResultCollection.new
+    collection_one << 1
+    collection_two = Boss::ResultCollection.new
+    collection_two << 2
+    
+    collection_one += collection_two
+    collection_one.size.should be 2
+  end
+  
 end
 
 describe Boss::ResultCollection, 'implementing the will_paginate collection api' do

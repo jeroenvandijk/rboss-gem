@@ -15,11 +15,16 @@ describe Boss::Api do
   #TODO: Mock HTTPSuccess
   def mock_http_response(stubs={})
     # mock('Net::HTTPSuccess',{:head => Net::HTTPSuccess.new('1.2', '200', 'OK'), :body => '{"ysearchresponse":{}}' })
-    mock('http_response', {:body => '{"ysearchresponse":{}}', :code => "200"}.merge(stubs))
+    mock('http_response', {:body => yahoo_json, :code => "200"}.merge(stubs))
   end
-
-  def yahoo_json
-    '{"ysearchresponse":{}}'
+  
+  def mock_http_response_with_one_record(stubs={})
+    mock_http_response(:body => yahoo_json)
+  end
+  
+  def yahoo_json(hash = {})
+    defaults = {:nextpage => "nextpage", :totalhits => "1000"}
+    %[{"ysearchresponse": #{defaults.merge(hash).to_json} }]
   end
 
   before(:each) do
@@ -183,5 +188,63 @@ describe Boss::Api do
     end
     
   end
-
+  
+  describe "#next_page" do
+    it "should request the next results when 'nextpage' is given" do
+      response_mock = mock_http_response(:body => yahoo_json(:nextpage => "nextpage"))
+    
+      Net::HTTP.should_receive(:get_response).exactly(2).times.and_return{ response_mock }
+      @api.search_web("monkey?magic", :count => 1)
+      @api.next_page.should be_kind_of Boss::ResultCollection
+    end
+    
+    it "should not request the next results when 'nextpage' is nil" do
+      response_mock = mock_http_response(:body => yahoo_json(:nextpage => nil))
+    
+      Net::HTTP.should_receive(:get_response).exactly(1).times.and_return{ response_mock }
+      @api.search_web("monkey?magic", :count => 1)
+      @api.next_page.should be_nil
+    end
+  end
+  
+  describe "#previous_page" do
+    it "should request the next results when 'nextpage' is given" do
+      response_mock = mock_http_response(:body => yahoo_json(:prevpage => "prevpage"))
+    
+      Net::HTTP.should_receive(:get_response).exactly(2).times.and_return{ response_mock }
+      @api.search_web("monkey?magic", :count => 1)
+      @api.previous_page.should be_kind_of Boss::ResultCollection
+    end
+    
+    it "should not request the next results when 'nextpage' is nil" do
+      response_mock = mock_http_response(:body => yahoo_json(:prevpage => nil))
+    
+      Net::HTTP.should_receive(:get_response).exactly(1).times.and_return{ response_mock }
+      @api.search_web("monkey?magic", :count => 1)
+      @api.previous_page.should be_nil
+    end
+  end
+  
+  describe "MAX_COUNT" do
+    it "should be 50" do
+      Boss::Api::MAX_COUNT.should eql 50
+    end
+  end
+  
+  describe "#search" do
+    
+    [ {:count => 2,   :limit => 100, :number_of_requests => 50, :totalhits => "400"},
+      {:count => 50,  :limit => 100, :number_of_requests => 2,  :totalhits => "400"},
+      {:count => 3,   :limit => 50,  :number_of_requests => 17, :totalhits => "50"},
+      {:count => 3,   :limit => 50,  :number_of_requests => 14, :totalhits => "40"},
+      {:count => 100, :limit => 1,   :number_of_requests => 1,  :totalhits => "40"}
+    ].each do |prop|
+      it "should do #{prop[:number_of_requests]} number of requests when count is #{prop[:count]} and limit is #{prop[:limit]}" do
+        response_mock = mock_http_response(:body => yahoo_json(:nextpage => "nextpage", :totalhits => prop[:totalhits]))
+        Net::HTTP.should_receive(:get_response).exactly(prop[:number_of_requests]).times.and_return{ response_mock }
+        @api.search_web("monkey?magic", :count => prop[:count], :limit => prop[:limit])
+      end
+      
+    end
+  end
 end

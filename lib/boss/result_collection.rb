@@ -25,6 +25,12 @@ module Boss
       @results[key]
     end
     
+    def +(other)
+      clone = self.clone
+      clone.instance_variable_set("@results", clone.results + other.results)
+      clone
+    end
+    
     # Implements neccessary api for the will_paginate view helper
     # to work with result sets out of the box
     def size
