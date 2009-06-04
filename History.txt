@@ -1,4 +1,8 @@
-== Version 0.1.8 (In Git)
+== Version 0.1.9
+* Support search all by using high limit values (Jeroen van Dijk)
+* when calling with :count => nil it will inherit value from :limit (Jeroen van Dijk)
+
+== Version 0.1.8
 * Updating to support cucumber's new syntax for scenario tables
 
 === Version 0.1.7
