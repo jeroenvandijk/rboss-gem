@@ -13,6 +13,7 @@ Feature: Web Search
   
   Examples: search types
     | type   | term   | count | limit | result_count |
+    | web    | monkey |       | 5     | 5            |
     | web    | monkey | 1     | 3     | 3            |
     | web    | monkey | 5     | 6     | 10           |
     | web    | monkey | 50    | 100   | 100          |

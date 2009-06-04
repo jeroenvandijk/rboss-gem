@@ -5,6 +5,7 @@ describe Boss::Config do
   it "should create with defaults" do
     config = Boss::Config.new
 
+    config.respond_to?(:limit).should be_true
     config.respond_to?(:count).should be_true
     config.respond_to?(:lang).should be_true
   end

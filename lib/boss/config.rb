@@ -5,8 +5,10 @@ module Boss
   class Config < OpenStruct
 
     def initialize(hash={})
-      #Setup defaults      
-      super({:count => 10, :lang => "en"}.merge(hash))
+      #Setup defaults
+      hash[:count] ||= hash[:limit] ||= 10
+      
+      super({:lang => "en"}.merge(hash))
     end
    
     def to_url

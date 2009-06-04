@@ -17,9 +17,13 @@ describe Boss::Api do
     # mock('Net::HTTPSuccess',{:head => Net::HTTPSuccess.new('1.2', '200', 'OK'), :body => '{"ysearchresponse":{}}' })
     mock('http_response', {:body => yahoo_json, :code => "200"}.merge(stubs))
   end
-  
+
   def mock_http_response_with_one_record(stubs={})
     mock_http_response(:body => yahoo_json)
+  end
+
+  def mock_results(stubs={})
+    mock(:results, {:totalhits => 100 }.merge(stubs) )
   end
   
   def yahoo_json(hash = {})
@@ -32,68 +36,23 @@ describe Boss::Api do
     @api.endpoint = 'http://www.example.com/'
   end
 
-  describe "responding to spelling search" do
+  %w(spelling new web image).each do |type|
+    describe "responding to #{type} search" do
 
-    it "should make a spelling request to yahoo service" do
-      Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
+      it "should make a #{type} request to yahoo service" do
+        Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
 
-      @api.search_spelling("girafes")
+        @api.search_web("monkey")
+      end
+
+      it "should build the #{type} objects" do
+        Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
+        Boss::ResultFactory.should_receive(:build).with(yahoo_json).and_return(mock_results)
+
+        @api.search_web("monkey")
+      end
+
     end
-
-    it "should build the spelling objects" do
-      Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
-      Boss::ResultFactory.should_receive(:build).with(yahoo_json)
-
-      @api.search_spelling("girafes")
-    end
-
-  end
-
-  describe "responding to news search" do
-    it "should make a news request to yahoo service" do
-      Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
-
-      @api.search_news("monkey")
-    end
-
-    it "should build the news objects" do
-      Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
-      Boss::ResultFactory.should_receive(:build).with(yahoo_json)
-
-      @api.search_news("monkey")
-    end
-  end
-
-  describe "responding to image search" do
-    it "should make a image request to yahoo service" do
-      Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
-
-      @api.search_images("hippo")
-    end
-
-    it "should build the image objects" do
-      Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
-      Boss::ResultFactory.should_receive(:build).with(yahoo_json)
-
-      @api.search_images("hippo")
-    end
-  end
-
-  describe "responding to web search" do
-
-    it "should make a web request to yahoo service" do
-      Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
-
-      @api.search_web("monkey")
-    end
-
-    it "should build the web objects" do
-      Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
-      Boss::ResultFactory.should_receive(:build).with(yahoo_json)
-
-      @api.search_web("monkey")
-    end
-
   end
 
   describe "failed search" do
@@ -237,7 +196,8 @@ describe Boss::Api do
       {:count => 50,  :limit => 100, :number_of_requests => 2,  :totalhits => "400"},
       {:count => 3,   :limit => 50,  :number_of_requests => 17, :totalhits => "50"},
       {:count => 3,   :limit => 50,  :number_of_requests => 14, :totalhits => "40"},
-      {:count => 100, :limit => 1,   :number_of_requests => 1,  :totalhits => "40"}
+      {:count => 100, :limit => 1,   :number_of_requests => 1,  :totalhits => "40"},
+      {:limit => 50, :count => nil, :number_of_requests => 1, :totalhits => "100"}
     ].each do |prop|
       it "should do #{prop[:number_of_requests]} number of requests when count is #{prop[:count]} and limit is #{prop[:limit]}" do
         response_mock = mock_http_response(:body => yahoo_json(:nextpage => "nextpage", :totalhits => prop[:totalhits]))

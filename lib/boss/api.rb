@@ -49,7 +49,7 @@ module Boss
     def search_boss(terms, search_type=SearchService::WEB, config = {})
       config = config.empty? ? Config.new : Config.new(config)
       yield config if block_given?
-      
+
       raise InvalidFormat, "'#{config.format}' is not a valid format. Valid formats are: #{FORMATS.join(',')}" unless FORMATS.include?(config.format) || config.format?
       raise InvalidConfig, "count must be > 0" unless config.count>0
       raise InvalidConfig, "App ID cannot be empty!" if @app_id.empty?
@@ -58,17 +58,15 @@ module Boss
       
       # Remember search instructions for iterating over pages
       @current_config = config.dup
-
+      
       if limit = config.delete_field(:limit)
         # Do a first request to gather required information
         results = make_request(build_request_url(terms, search_type, config) )
-
         total_count = results.totalhits.to_i
         limit = total_count if total_count < limit
         number_of_requests = (limit.to_f / config.count).ceil - 1
 
         number_of_requests.times { results += next_page }
-        
         results
       else
         results = make_request(build_request_url(terms, search_type, config))
@@ -82,7 +80,7 @@ module Boss
       case response.code
       when "200"
         data = response.body
-      
+
         if @current_config.format?
           search_results = ResultFactory.build(data)
           

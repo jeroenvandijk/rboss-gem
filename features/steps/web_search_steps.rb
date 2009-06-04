@@ -14,10 +14,12 @@ end
 
 When /^I do the following search$/ do |table|
   # Do integer conversions
-  table.map_column!('count') { |x| x.to_i }
-  table.map_column!('limit') { |x| x.to_i }
+  table.send :map_headers!, 'limit' => :limit, 'count' => :count
+  table.map_column!(:limit) { |x| x.nil? ? nil : x.to_i }
+  table.map_column!(:count) { |x| x.nil? ? nil : x.to_i }
 
-  search_options = table.hashes.first
+  search_options = table.hashes.first  
+
   type = search_options.delete('type')
   term = search_options.delete('term')
 
