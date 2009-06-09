@@ -12,7 +12,7 @@ module Boss
   YAHOO_VERSION = 1
 
   module SearchService
-    %w[web images news spelling].each { |e| const_set(e.upcase, e) }
+    %w[web images news spelling se_inlink].each { |e| const_set(e.upcase, e) }
   end
 
   FORMATS = %w[xml json]

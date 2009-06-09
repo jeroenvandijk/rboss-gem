@@ -36,20 +36,20 @@ describe Boss::Api do
     @api.endpoint = 'http://www.example.com/'
   end
 
-  %w(spelling new web image).each do |type|
+  %w(spelling news web images inlinks).each do |type|
     describe "responding to #{type} search" do
 
       it "should make a #{type} request to yahoo service" do
         Net::HTTP.should_receive(:get_response).and_return{ mock_http_response }
 
-        @api.search_web("monkey")
+        @api.send("search_#{type}", "monkey")
       end
 
       it "should build the #{type} objects" do
         Net::HTTP.stub!(:get_response).and_return{ mock_http_response }
         Boss::ResultFactory.should_receive(:build).with(yahoo_json).and_return(mock_results)
 
-        @api.search_web("monkey")
+        @api.send("search_#{type}", "monkey")
       end
 
     end

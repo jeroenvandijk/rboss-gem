@@ -36,6 +36,10 @@ module Boss
     def search_spelling(term, *conditions, &block)
       search_boss(term, SearchService::SPELLING, *conditions, &block)
     end
+    
+    def search_inlinks(term, *conditions, &block)
+      search_boss(term, SearchService::SE_INLINK, *conditions, &block)
+    end
 
     def next_page
       make_request(@basepoint + @next_page_path) if @next_page_path

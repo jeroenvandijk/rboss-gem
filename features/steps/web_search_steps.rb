@@ -32,6 +32,8 @@ When /^I do the following search$/ do |table|
     @results = @api.search_images(term, search_options)
   when 'spell'
     @results = @api.search_spelling(term, search_options)
+  when 'inlinks'
+    @results = @api.search_inlinks(term, search_options)
   else
     raise Exception.new "invalid search: #{type}"
   end

@@ -5,7 +5,7 @@ module Boss
   class ResultFactory
 
     module SearchType
-      %w[web images news spell].each { |e| const_set(e.upcase, e) }
+      %w[web images news spell se_inlink].each { |e| const_set(e.upcase, e) }
     end
 
     SEARCH_RESPONSE = 'ysearchresponse'
@@ -39,6 +39,8 @@ module Boss
                 result_collection << Result::News.new(result)
               when SearchType::SPELL
                 result_collection << Result::Spell.new(result)
+              when SearchType::SE_INLINK
+                result_collection << Result::Inlink.new(result)
               end
 
             end

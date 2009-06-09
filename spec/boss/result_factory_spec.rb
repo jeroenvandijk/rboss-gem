@@ -8,6 +8,8 @@ describe Boss::ResultFactory do
 
   web_json_result = '{"ysearchresponse":{"responsecode":"200","nextpage":"nextpage","totalhits":"344","count":"1","start":"0","resultset_web":[{"abstract":"abstract","clickurl":"clickurl","date":"2008\/08\/18","language":"en english","source":"source","sourceurl":"sourceurl","time":"09:17:29","title":"monkey_title","url":"url"}]}}'
 
+  inlink_json_result = '{"ysearchresponse":{"responsecode":"200","nextpage":"nextpage","totalhits":"1","count":"1","start":"0","resultset_se_inlink":[{"abstract":"Linked monkeys","clickurl":"clickurl","title":"title","url":"url"}]}}'
+
   spelling_json_result = '{"ysearchresponse":{"responsecode":"200","totalhits":"1","count":"1","start":"0","resultset_spell":[{"suggestion":"giraffes"}]}}'
 
   error_json_result = '{"Error":"true"}'
@@ -49,6 +51,13 @@ describe Boss::ResultFactory do
 
     Boss::ResultFactory.build(spelling_json_result)
   end
+  
+  it "should create a new inlink object from json" do
+    Boss::Result::Inlink.should_receive(:new).once
+
+    Boss::ResultFactory.build(inlink_json_result)
+  end
+  
 
   it "should raise an error if json result carries an error" do
     lambda { Boss::ResultFactory.build(error_json_result) }.should raise_error(Boss::BossError)
