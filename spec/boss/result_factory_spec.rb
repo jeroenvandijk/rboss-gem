@@ -10,7 +10,7 @@ describe Boss::ResultFactory do
 
   inlink_json_result = '{"ysearchresponse":{"responsecode":"200","nextpage":"nextpage","totalhits":"1","count":"1","start":"0","resultset_se_inlink":[{"abstract":"Linked monkeys","clickurl":"clickurl","title":"title","url":"url"}]}}'
 
-  spelling_json_result = '{"ysearchresponse":{"responsecode":"200","totalhits":"1","count":"1","start":"0","resultset_spell":[{"suggestion":"giraffes"}]}}'
+  spell_json_result = '{"ysearchresponse":{"responsecode":"200","totalhits":"1","count":"1","start":"0","resultset_spell":[{"suggestion":"giraffes"}]}}'
 
   error_json_result = '{"Error":"true"}'
 
@@ -21,43 +21,14 @@ describe Boss::ResultFactory do
     
     Boss::ResultFactory.build(news_json_result)
   end
-  
-  it "should create a new news object from json" do
-    Boss::Result::News.should_receive(:new).once
 
-    Boss::ResultFactory.build(news_json_result)
+  %w(News Image Web Spell Inlink).each do |type|  
+    it "should create a new #{type} object from json" do
+      Boss::Result.const_get(type).should_receive(:new).once
+
+      Boss::ResultFactory.build(eval("#{type.downcase}_json_result") )
+    end
   end
-
-  it "should correctly map fields with from json to news object" do
-    news_results = Boss::ResultFactory.build(news_json_result)
-
-    news_results[0].title.should == "monkey_title"
-  end
-
-  it "should build image objects from json" do
-    Boss::Result::Image.should_receive(:new).once
-
-    Boss::ResultFactory.build(image_json_result)
-  end
-
-  it "should build web object from json" do
-    Boss::Result::Web.should_receive(:new).once
-
-    Boss::ResultFactory.build(web_json_result)
-  end
-
-  it "should build spelling object from json" do
-    Boss::Result::Spell.should_receive(:new).once
-
-    Boss::ResultFactory.build(spelling_json_result)
-  end
-  
-  it "should create a new inlink object from json" do
-    Boss::Result::Inlink.should_receive(:new).once
-
-    Boss::ResultFactory.build(inlink_json_result)
-  end
-  
 
   it "should raise an error if json result carries an error" do
     lambda { Boss::ResultFactory.build(error_json_result) }.should raise_error(Boss::BossError)
